@@ -27,7 +27,7 @@ class MRobustScaler(BaseEstimator, TransformerMixin):
     def transform(self, X): 
         data = X.copy()
         rscaler=RobustScaler()
-        rscaler.fit(X=data[data.columns.intersection(self.columns)])
-        data[data.columns.intersection(self.columns)]=rscaler.transform(data[data.columns.intersection(self.columns)])
+        rscaler.fit(X=data[:,self.columns])
+        data[:,self.columns])=rscaler.transform(data[:,self.columns])
         return data
 
