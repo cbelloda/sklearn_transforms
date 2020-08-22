@@ -28,6 +28,6 @@ class MRobustScaler(BaseEstimator, TransformerMixin):
         data = X.copy()
         rscaler=RobustScaler()
         rscaler.fit(X=data[:,self.columns])
-        data[:,self.columns])=rscaler.transform(data[:,self.columns])
+        data[:,self.columns]=rscaler.transform(data[:,self.columns])
         return data
 
