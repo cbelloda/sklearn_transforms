@@ -1,4 +1,5 @@
 from sklearn.base import BaseEstimator, TransformerMixin
+from sklearn.preprocessing import RobustScaler
 
 # All sklearn Transforms must have the `transform` and `fit` methods
 class DropColumns(BaseEstimator, TransformerMixin):
@@ -25,6 +26,8 @@ class MRobustScaler(BaseEstimator, TransformerMixin):
     
     def transform(self, X): 
         data = X.copy()
-        
+        rscaler=RobustScaler()
+        rscaler.fit(X=data[data.columns.intersection(self.columns)])
+        data[data.columns.intersection(self.columns)]=rscaler.transform(data[data.columns.intersection(self.columns)])
         return data
 
