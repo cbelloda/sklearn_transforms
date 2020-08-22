@@ -14,3 +14,17 @@ class DropColumns(BaseEstimator, TransformerMixin):
         data = X.copy()
         # Retornamos um novo dataframe sem as colunas indesejadas
         return data.drop(labels=self.columns, axis='columns')
+
+class MRobustScaler(BaseEstimator, TransformerMixin):
+    def __init__(self, columns):
+        self.columns = columns
+        
+    def fit(self, X, y=None):
+        return self
+    
+    def transform(self, X): 
+        data = X.copy()
+        rscaler=RobustScaler()
+        robustScaler=rscaler.fit(X=data[data.columns.intersection(self.columns)])
+        data[data.columns.intersection(self.columns)]=rscaler.transform(data[data.columns.intersection(self.columns)])
+        return data
