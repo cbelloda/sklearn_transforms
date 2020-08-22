@@ -15,20 +15,18 @@ class DropColumns(BaseEstimator, TransformerMixin):
         return data.drop(labels=self.columns, axis='columns')
 
 
-class MRobustScaler(BaseEstimator, TransformerMixin):    
+class MRobustScaler(BaseEstimator, TransformerMixin):
     def __init__(self, columns):
-        import sklearn.preprocessing as pre
         self.columns = columns
-        self.rscaler=pre.RobustScaler()
         
-    def fit(self, X, y=None):        
-        from sklearn.preprocessing import RobustScaler
-        robustScaler=self.rscaler.fit(X=X[X.columns.intersection(self.columns)])
+    def fit(self, X, y=None):
         return self
-
-    def transform(self, X):
+    
+    def transform(self, X): 
         from sklearn.preprocessing import RobustScaler
         data = X.copy()
-        data[data.columns.intersection(self.columns)]=self.rscaler.transform(data[data.columns.intersection(self.columns)])
+        rscaler=RobustScaler()
+        rscaler.fit(X=data[data.columns.intersection(self.columns)])
+        data[data.columns.intersection(self.columns)]=rscaler.transform(data[data.columns.intersection(self.columns)])
         return data
 
