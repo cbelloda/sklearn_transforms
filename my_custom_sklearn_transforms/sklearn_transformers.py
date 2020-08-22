@@ -17,14 +17,15 @@ class DropColumns(BaseEstimator, TransformerMixin):
 from sklearn.preprocessing import RobustScaler
 
 class MRobustScaler(BaseEstimator, TransformerMixin):
-    from sklearn.preprocessing import RobustScaler
+    
     def __init__(self, columns):
         self.columns = columns
         
     def fit(self, X, y=None):
         return self
     
-    def transform(self, X): 
+    def transform(self, X):
+        from sklearn.preprocessing import RobustScaler 
         data = X.copy()
         rscaler=RobustScaler()
         robustScaler=rscaler.fit(X=data[data.columns.intersection(self.columns)])
