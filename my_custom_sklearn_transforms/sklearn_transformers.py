@@ -18,21 +18,6 @@ class DropColumns(BaseEstimator, TransformerMixin):
         # Retornamos um novo dataframe sem as colunas indesejadas
         return data.drop(labels=self.columns, axis='columns')
 
-class MRobustScaler(BaseEstimator, TransformerMixin):
-    def __init__(self, columns):
-        self.columns = columns
-        
-    def fit(self, X, y=None):
-        return self
-    
-    def transform(self, XX): 
-        data = XX.copy()
-        rscaler=RobustScaler()
-        rscaler.fit(X=XX[XX.columns.intersection(self.columns)])
-        XX[XX.columns.intersection(self.columns)]=rscaler.transform(XX[XX.columns.intersection(self.columns)])
-        return XX
-
-
 class MSimpleImputer(BaseEstimator, TransformerMixin):
     def __init__(self, columns):
         self.columns = columns
@@ -40,14 +25,27 @@ class MSimpleImputer(BaseEstimator, TransformerMixin):
     def fit(self, X, y=None):
         return self
 
-    def transform(self, XX): 
-        data = XX.copy()
+    def transform(self, X): 
+        data = X.copy()
         si = SimpleImputer(
             missing_values=np.nan, 
             verbose=0,
             copy=True
         )
-        si.fit(X=XX[XX.columns.intersection(self.columns)])
-        XX[XX.columns.intersection(self.columns)]=pd.DataFrame.from_records(data=si.transform(X=XX[XX.columns.intersection(self.columns)]),columns=self.columns)
-        return XX
+        si.fit(X=data[data.columns.intersection(self.columns)])
+        data[data.columns.intersection(self.columns)]=pd.DataFrame.from_records(data=si.transform(X=data[data.columns.intersection(self.columns)]),columns=self.columns)
+        return data
 
+class MRobustScaler(BaseEstimator, TransformerMixin):
+    def __init__(self, columns):
+        self.columns = columns
+        
+    def fit(self, X, y=None):
+        return self
+    
+    def transform(self, X): 
+        data = X.copy()
+        rscaler=RobustScaler()
+        rscaler.fit(X=data[data.columns.intersection(self.columns)])
+        data[data.columns.intersection(self.columns)]=rscaler.transform(data[data.columns.intersection(self.columns)])
+        return X
