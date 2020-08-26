@@ -32,10 +32,12 @@ class MSimpleImputer(BaseEstimator, TransformerMixin):
             verbose=0,
             copy=True
         )
+        print(X.columns)
+        print("\n\nValores nulos en el conjunto de datos ANTES de la transformación SimpleImputer: \n\n{}\n".format(data.isnull().sum(axis = 0)))
         si.fit(X=data[data.columns.intersection(self.columns)])
         data[data.columns.intersection(self.columns)]=pd.DataFrame.from_records(data=si.transform(X=data[data.columns.intersection(self.columns)]),columns=self.columns)
+        print("\n\nValores nulos en el conjunto de datos DESPUÉS de la transformación SimpleImputer: \n\n{}\n".format(data.isnull().sum(axis = 0)))
         return data
-
 class MRobustScaler(BaseEstimator, TransformerMixin):
     def __init__(self, columns):
         self.columns = columns
