@@ -3,6 +3,7 @@ from sklearn.preprocessing import RobustScaler
 from sklearn.impute import SimpleImputer
 import numpy as np
 import pandas as pd
+from sklearn.impute import KNNImputer
 
 # All sklearn Transforms must have the `transform` and `fit` methods
 class DropColumns(BaseEstimator, TransformerMixin):
@@ -50,4 +51,18 @@ class MRobustScaler(BaseEstimator, TransformerMixin):
         rscaler=RobustScaler()
         rscaler.fit(X=data[data.columns.intersection(self.columns)])
         data[data.columns.intersection(self.columns)]=rscaler.transform(data[data.columns.intersection(self.columns)])
-        return X
+        return data
+
+class MKNNImputer(BaseEstimator, TransformerMixin):
+    def __init__(self, columns,n_neighbors):
+        self.columns = columns
+        self.n_neighbors=n_neighbors
+        
+    def fit(self, X, y=None):
+        return self
+    
+    def transform(self, X): 
+        data = X.copy()
+        imputer = KNNImputer(n_neighbors=self.n_neighbors)
+        data[data.columns.intersection(self.columns)]=imputer.fit_transform(data[data.columns.intersection(self.columns)])
+        return data
